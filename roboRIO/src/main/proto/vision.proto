@@ -7,7 +7,7 @@ option java_outer_classname = "VisionProto";
 package vision;
 
 service Vision {
-  rpc GetMotorSpeed(MotorSpeed) returns (MotorSpeedResponse) {}
+  rpc SetMotorSpeed(MotorSpeed) returns (MotorSpeedResponse) {}
 }
 
 message MotorSpeed {

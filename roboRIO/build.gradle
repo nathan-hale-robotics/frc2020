@@ -30,10 +30,14 @@ repositories {
   mavenCentral()
 }
 
+def grpcVersion = "1.26.0"
+def protobufVersion = "3.11.1"
+
 dependencies {
-  implementation "io.grpc:grpc-protobuf:1.26.0"
-  implementation "io.grpc:grpc-stub:1.26.0"
-  implementation "com.google.protobuf:protobuf-java-util:3.11.1"
+  implementation "io.grpc:grpc-protobuf:${grpcVersion}"
+  implementation "io.grpc:grpc-stub:${grpcVersion}"
+  implementation "com.google.protobuf:protobuf-java-util:${protobufVersion}"
+  implementation "io.grpc:grpc-netty:${grpcVersion}"
 
   compile wpi.deps.wpilib()
   compile wpi.deps.vendor.java()
@@ -51,9 +55,9 @@ jar {
 }
 
 protobuf {
-  protoc { artifact = "com.google.protobuf:protoc:3.11.2" }
+  protoc { artifact = "com.google.protobuf:protoc:${protobufVersion}" }
   plugins {
-    grpc { artifact = "io.grpc:protoc-gen-grpc-java:1.26.0" }
+    grpc { artifact = "io.grpc:protoc-gen-grpc-java:${grpcVersion}" }
   }
   generateProtoTasks {
     all()*.plugins { grpc {} }

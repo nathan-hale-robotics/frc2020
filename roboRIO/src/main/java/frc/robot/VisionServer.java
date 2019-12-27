@@ -15,7 +15,7 @@ public class VisionServer extends Thread {
 
   @Override
   public void run() {
-    Server server = ServerBuilder.forPort(8080)
+    Server server = ServerBuilder.forPort(8000)
       .addService(new VisionImpl())
       .build();
     try {
@@ -30,7 +30,7 @@ public class VisionServer extends Thread {
 
   private static class VisionImpl extends VisionGrpc.VisionImplBase {
     @Override
-    public void getMotorSpeed(MotorSpeed req, StreamObserver<MotorSpeedResponse> response) {
+    public void setMotorSpeed(MotorSpeed req, StreamObserver<MotorSpeedResponse> response) {
       System.out.println("Right: " + req.getRight());
       System.out.println("Left: " + req.getLeft());
       MotorSpeedResponse.Builder res = MotorSpeedResponse.newBuilder();

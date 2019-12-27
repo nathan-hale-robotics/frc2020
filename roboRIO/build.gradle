@@ -3,6 +3,7 @@ import edu.wpi.first.gradlerio.GradleRIOPlugin
 plugins {
   id "java"
   id "edu.wpi.first.GradleRIO" version "2019.4.1"
+  id 'com.google.protobuf' version '0.8.11'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -10,8 +11,6 @@ targetCompatibility = JavaVersion.VERSION_1_8
 
 def ROBOT_MAIN_CLASS = "frc.robot.Main"
 
-// Define my targets (RoboRIO) and artifacts (deployable files)
-// This is added by GradleRIO's backing project EmbeddedTools.
 deploy {
   targets {
     roboRIO("roborio") {
@@ -22,28 +21,20 @@ deploy {
     frcJavaArtifact('frcJava') {
       targets << "roborio"
     }
-    // Built in artifact to deploy arbitrary files to the roboRIO.
-    fileTreeArtifact('frcStaticFileDeploy') {
-      // The directory below is the local directory to deploy
-      files = fileTree(dir: 'src/main/deploy')
-      // Deploy to RoboRIO target, into /home/lvuser/deploy
-      targets << "roborio"
-      directory = '/home/lvuser/deploy'
-    }
   }
 }
 
-// Set this to true to enable desktop support.
 def includeDesktopSupport = false
 
-// Maven central needed for JUnit
 repositories {
   mavenCentral()
 }
 
-// Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
-// Also defines JUnit 4.
 dependencies {
+  implementation "io.grpc:grpc-protobuf:1.26.0"
+  implementation "io.grpc:grpc-stub:1.26.0"
+  implementation "com.google.protobuf:protobuf-java-util:3.11.1"
+
   compile wpi.deps.wpilib()
   compile wpi.deps.vendor.java()
   nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
@@ -58,3 +49,23 @@ jar {
   from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
   manifest GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
 }
+
+protobuf {
+  protoc { artifact = "com.google.protobuf:protoc:3.11.2" }
+  plugins {
+    grpc { artifact = "io.grpc:protoc-gen-grpc-java:1.26.0" }
+  }
+  generateProtoTasks {
+    all()*.plugins { grpc {} }
+  }
+}
+
+sourceSets {
+  main {
+    java {
+      srcDirs 'build/generated/source/proto/main/grpc'
+      srcDirs 'build/generated/source/proto/main/java'
+    }
+  }
+}
+

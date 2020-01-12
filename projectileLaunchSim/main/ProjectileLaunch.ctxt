@@ -1,8 +1,0 @@
-#BlueJ class context
-comment0.target=ProjectileLaunch
-comment0.text=\r\n\ This\ is\ a\ demonstration\ of\ my\ physics\ engine.\ This\ program\ simulates\ the\ dropping\ of\ differently\ massed\ spheres\ from\ 5\ meters,\ with\ air\ resistance\ taken\ into\ account.\r\n\r\n\ @Nicholas\r\n\ @1.0\r\n
-comment1.params=args
-comment1.target=void\ main(java.lang.String[])
-comment2.params=ball\ height
-comment2.target=double\ simulateFreefall(PhysicsObject,\ double)
-numComments=3

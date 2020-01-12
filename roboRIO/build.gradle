@@ -4,6 +4,7 @@ plugins {
   id "java"
   id "edu.wpi.first.GradleRIO" version "2020.1.2"
   id 'com.google.protobuf' version '0.8.11'
+  id "com.diffplug.gradle.spotless" version "3.27.0"
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
@@ -66,6 +67,20 @@ jar {
     }
   }
   manifest GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
+}
+
+spotless {
+  java {
+    target fileTree('.') {
+      include '**/*.java'
+      exclude 'build/**'
+    }
+
+    trimTrailingWhitespace()
+    removeUnusedImports()
+
+    googleJavaFormat()
+  }
 }
 
 protobuf {

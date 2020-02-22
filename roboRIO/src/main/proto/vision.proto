@@ -8,6 +8,7 @@ package vision;
 
 service Vision {
   rpc SetMoveDirection(stream MoveDirection) returns (stream MoveDirectionResponse) {}
+  rpc UpdateCamera(stream CameraUpdate) returns (stream CameraUpdateResponse) {}
 }
 
 message MoveDirection {
@@ -17,5 +18,13 @@ message MoveDirection {
 }
 
 message MoveDirectionResponse {
+
+}
+
+message CameraUpdate {
+  bytes image = 1;
+}
+
+message CameraUpdateResponse {
 
 }

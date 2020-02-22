@@ -3,12 +3,15 @@ package frc.robot;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import java.util.logging.Logger;
 
 public class Robot extends TimedRobot {
   private Joystick joystick;
   private VisionServer server;
   private MecanumDrive drive;
   private Servo servo;
+
+  private static final Logger logger = Logger.getLogger(Robot.class.getName());
 
   @Override
   public void robotInit() {

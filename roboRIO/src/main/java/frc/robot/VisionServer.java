@@ -1,6 +1,5 @@
 package frc.robot;
 
-import io.grpc.Attributes;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
@@ -32,14 +31,19 @@ public class VisionServer extends Thread {
 
   private static class VisionImpl extends VisionGrpc.VisionImplBase {
 
-    @Override
-    public StreamObserver<MotorSpeed> setMotorSpeed(StreamObserver<MotorSpeedResponse> observer) {
+    public StreamObserver<MoveDirection> setMotorSpeed(
+        StreamObserver<MoveDirectionResponse> observer) {
       return new StreamObserver<>() {
         @Override
-        public void onNext(MotorSpeed speed) {
+        public void onNext(MoveDirection speed) {
           logger.info(
-              "Setting motor speed to: right: " + speed.getRight() + ", left: " + speed.getLeft());
-          MotorSpeedResponse.Builder res = MotorSpeedResponse.newBuilder();
+              "Setting motor speed to: forward: "
+                  + speed.getForward()
+                  + ", strafe: "
+                  + speed.getStrafe()
+                  + ", turn: "
+                  + speed.getTurn());
+          MoveDirectionResponse.Builder res = MoveDirectionResponse.newBuilder();
           observer.onNext(res.build());
         }
 

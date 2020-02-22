@@ -7,14 +7,15 @@ option java_outer_classname = "VisionProto";
 package vision;
 
 service Vision {
-  rpc SetMotorSpeed(stream MotorSpeed) returns (stream MotorSpeedResponse) {}
+  rpc SetMoveDirection(stream MoveDirection) returns (stream MoveDirectionResponse) {}
 }
 
-message MotorSpeed {
-  float left = 1;
-  float right = 2;
+message MoveDirection {
+  float forward = 1;
+  float strafe = 2;
+  float turn = 3;
 }
 
-message MotorSpeedResponse {
+message MoveDirectionResponse {
 
 }

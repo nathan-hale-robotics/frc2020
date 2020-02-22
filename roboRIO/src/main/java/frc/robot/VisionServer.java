@@ -1,5 +1,6 @@
 package frc.robot;
 
+import io.grpc.Attributes;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
@@ -19,6 +20,7 @@ public class VisionServer extends Thread {
   public void run() {
     Server server = ServerBuilder.forPort(8000).addService(new VisionImpl()).build();
     try {
+      logger.info("Starting vision server!");
       server.start();
       server.awaitTermination();
     } catch (InterruptedException e) {

@@ -5,6 +5,8 @@ import vision_pb2_grpc
 
 import cv2
 
+import color_sensor
+
 cap = cv2.VideoCapture(0)
 
 class MoveDirectionIterator:
@@ -38,10 +40,14 @@ class CameraUpdateIterator:
         array[(y * width + x) * 3 + 0] = frame[y][x][0]
         array[(y * width + x) * 3 + 1] = frame[y][x][1]
         array[(y * width + x) * 3 + 2] = frame[y][x][2]
+    color_sensor.get_color(cap)
     return vision_pb2.CameraUpdate(image=bytes(array))
 
 channel = grpc.insecure_channel('localhost:1234')
 stub = vision_pb2_grpc.VisionStub(channel)
+
+while True:
+  color_sensor.get_color(cap)
 
 for res in stub.UpdateCamera(CameraUpdateIterator()):
   print("REE:", res)

@@ -7,24 +7,23 @@ option java_outer_classname = "VisionProto";
 package vision;
 
 service Vision {
-  rpc SetMoveDirection(stream MoveDirection) returns (stream MoveDirectionResponse) {}
-  rpc UpdateCamera(stream CameraUpdate) returns (stream CameraUpdateResponse) {}
+  rpc UpdateInfo(stream InfoUpdate) returns (stream InfoResponse) {}
 }
 
-message MoveDirection {
+message InfoUpdate {
   float forward = 1;
   float strafe = 2;
   float turn = 3;
+  Color color = 4;
+  enum Color {
+    UNDEFINED = 0;
+    RED = 1;
+    YELLOW = 2;
+    GREEN = 3;
+    BLUE = 4;
+  }
 }
 
-message MoveDirectionResponse {
-
-}
-
-message CameraUpdate {
-  bytes image = 1;
-}
-
-message CameraUpdateResponse {
+message InfoResponse {
 
 }

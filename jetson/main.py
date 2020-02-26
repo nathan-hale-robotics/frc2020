@@ -9,7 +9,7 @@ import color_sensor
 
 cap = cv2.VideoCapture(2)
 
-class MoveDirectionIterator:
+class InfoUpdateIterator:
   def __init__(self):
     self.forward = 0
     self.strafe = 0
@@ -25,13 +25,13 @@ class MoveDirectionIterator:
       raise StopIteration
     if cv2.waitKey(1) & 0xFF == ord('q'):
       raise StopIteration
-    color_sensor.get_color(frame)
-    return vision_pb2.MoveDirection(forward=self.forward, strafe=self.strafe, turn=self.turn)
+    color = color_sensor.get_color(frame)
+    return vision_pb2.InfoUpdate(forward=self.forward, strafe=self.strafe, turn=self.turn, color=color)
 
 channel = grpc.insecure_channel('localhost:1234')
 stub = vision_pb2_grpc.VisionStub(channel)
 
-for i in MoveDirectionIterator():
+for i in InfoUpdateIterator():
   print(i)
 
 cv2.destroyAllWindows()

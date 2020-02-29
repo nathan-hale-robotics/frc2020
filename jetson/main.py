@@ -26,8 +26,22 @@ class InfoUpdateIterator:
     if cv2.waitKey(1) & 0xFF == ord('q'):
       raise StopIteration
     color = color_sensor.get_color(frame)
-    things = ball_sensor.get_distance(frame)
-    return vision_pb2.InfoUpdate(forward=self.forward, strafe=self.strafe, turn=self.turn, color=color)
+    ball_coords = ball_sensor.get_distance(frame)
+    print(ball_coords)
+    if (ball_coords.any() == None):
+      ball_coords = [-1, -1, -1, -1, -1, -1]
+    return vision_pb2.InfoUpdate(
+        forward=self.forward,
+        strafe=self.strafe,
+        turn=self.turn,
+        color=color,
+        ball=vision_pb2.InfoUpdate.Ball(
+          distance=ball_coords[0],
+          angle=ball_coords[1],
+          x=ball_coords[2],
+          y=ball_coords[3],
+          width=ball_coords[4],
+          height=ball_coords[5]))
 
 channel = grpc.insecure_channel('localhost:1234')
 stub = vision_pb2_grpc.VisionStub(channel)

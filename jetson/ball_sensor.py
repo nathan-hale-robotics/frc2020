@@ -12,12 +12,12 @@ KNOWN_WIDTH = 7
 #focalLength = 800
 #webCam focallength
 focalLength = 690
-cap = cv2.VideoCapture(1)
+
 def distance_to_camera(knownWidth, focalLength, perWidth):
 	# compute and return the distance from the maker to the camera
 	return (knownWidth * focalLength) / perWidth
 
-def getDistance(frame):
+def get_distance(frame):
 	hsv = cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
 	yellow = cv2.inRange(hsv,(20,90,100), (30,255,255))
 	blur = cv2.GaussianBlur(yellow, (5, 5), 0)
@@ -42,7 +42,8 @@ def getDistance(frame):
 			max_area = area
 			max_box = box
 			max_contour = c
-
+    angle = None
+    hypotenuse = None
     #get the max countor detail
 	x,y,w,h	= cv2.boundingRect(max_box)
 	#get image width
@@ -63,18 +64,4 @@ def getDistance(frame):
 		distanceH = (default_Shift - x) / focalLength * distanceV
 		angle = math.atan(distanceH / distanceV) * 180 / math.pi
 		hypotenuse = math.sqrt(distanceH * distanceH + distanceV * distanceV)
-		return np.array([hypotenuse, angle])
-
-while(True):
-	_, frame = cap.read()
-	things = getDistance(frame)
-	if things is not None:
-		print(things) 
-	cv2.imshow('frame', frame)
-	# if q is pressed, quit
-	if cv2.waitKey(1) & 0xFF == ord('q'):
-		break
-
-# close windows
-cap.release()
-cv2.destroyAllWindows()
+	return np.array([hypotenuse, angle])

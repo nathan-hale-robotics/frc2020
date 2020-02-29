@@ -45,7 +45,7 @@ def get_distance(frame):
     angle = None
     hypotenuse = None
     #get the max countor detail
-    x,y,w,h    = cv2.boundingRect(max_box)
+    x,y,w,h = cv2.boundingRect(max_box)
     #get image width
     imageW = frame.shape[1]
     #vertical distance
@@ -64,4 +64,4 @@ def get_distance(frame):
         distanceH = (default_Shift - x) / focalLength * distanceV
         angle = math.atan(distanceH / distanceV) * 180 / math.pi
         hypotenuse = math.sqrt(distanceH * distanceH + distanceV * distanceV)
-    return np.array([hypotenuse, angle])
+    return np.array([hypotenuse, angle, x,y,w,h])

@@ -42,8 +42,8 @@ def get_distance(frame):
             max_area = area
             max_box = box
             max_contour = c
-    angle = 0
-    hypotenuse = 0
+    angle = None
+    hypotenuse = None
     #get the max countor detail
     x,y,w,h = cv2.boundingRect(max_box)
     #get image width

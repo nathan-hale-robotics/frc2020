@@ -6,7 +6,7 @@ import vision_pb2_grpc
 import cv2
 
 import color_sensor
-
+import ball_sensor
 cap = cv2.VideoCapture(2)
 
 class InfoUpdateIterator:
@@ -26,6 +26,7 @@ class InfoUpdateIterator:
     if cv2.waitKey(1) & 0xFF == ord('q'):
       raise StopIteration
     color = color_sensor.get_color(frame)
+    things = ball_sensor.get_distance(frame)
     return vision_pb2.InfoUpdate(forward=self.forward, strafe=self.strafe, turn=self.turn, color=color)
 
 channel = grpc.insecure_channel('localhost:1234')

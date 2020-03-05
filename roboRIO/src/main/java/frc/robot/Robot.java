@@ -107,7 +107,10 @@ public class Robot extends TimedRobot {
     double forward = -driveJoystick.getRawAxis(1) * speed;
     double strafe = driveJoystick.getRawAxis(0) * speed;
     double turn = driveJoystick.getRawAxis(4) * speed;
-    drive.driveCartesian(strafe, forward, turn);
+    drive.driveCartesian(
+      joystickFunc(strafe, 20.0), 
+      joystickFunc(forward, 20.0), 
+      joystickFunc(turn, 20.0));
   }
 
   public void updateColorWheel() {
@@ -146,5 +149,12 @@ public class Robot extends TimedRobot {
     public int getValue() {
       return value;
     }
+  }
+
+  private double joystickFunc(
+    double x, 
+    double c) {
+    return Math.signum(x)*
+      (Math.pow(c+1.0, Math.abs(x)) - 1.0)/c;
   }
 }

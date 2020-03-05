@@ -5,6 +5,7 @@ import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
@@ -40,7 +41,8 @@ public class ImageProcessor {
     if (in.grabFrame(frame) == 0) {
       return;
     }
-    Imgproc.cvtColor(frame, output, Imgproc.COLOR_BGR2GRAY);
+    Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGR2GRAY);
+    Core.flip(frame, output, 0);
     out.putFrame(output);
   }
 }

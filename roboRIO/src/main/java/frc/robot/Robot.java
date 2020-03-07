@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 
+import java.security.InvalidParameterException;
 import java.util.logging.Logger;
 
 public class Robot extends TimedRobot {
@@ -103,14 +104,17 @@ public class Robot extends TimedRobot {
   }
 
   public void updateDrive() {
+    final double C = 3;
+    final double A = 0.05;
+    final double DEAD_ZONE = 0.05;
     double speed = driveJoystick.getRawButton(DriveButtons.LEFT_BUMPER.getValue()) ? .5 : 1;
     double forward = -driveJoystick.getRawAxis(1) * speed;
     double strafe = driveJoystick.getRawAxis(0) * speed;
     double turn = driveJoystick.getRawAxis(4) * speed;
     drive.driveCartesian(
-      joystickFunc(strafe, 20.0), 
-      joystickFunc(forward, 20.0), 
-      joystickFunc(turn, 20.0));
+      joystickFunc(strafe, C, A, DEAD_ZONE),
+      joystickFunc(forward, C, A, DEAD_ZONE),
+      joystickFunc(turn, C, A, DEAD_ZONE));
   }
 
   public void updateColorWheel() {
@@ -151,10 +155,33 @@ public class Robot extends TimedRobot {
     }
   }
 
+  /**
+   *
+   * @param x input speed.
+   * @param c the more negative c is the more linear x will be with the returned double aka
+   *          the more @return == x.
+   * @param a lowest possible return value other than 0.
+   * @param deadZone the absolute value of the upper and lower range the input x will be set to 0.
+   * @return roughly e^x.
+   */
   private double joystickFunc(
-    double x, 
-    double c) {
-    return Math.signum(x)*
-      (Math.pow(c+1.0, Math.abs(x)) - 1.0)/c;
+          double x,
+          final double c,
+          double a,
+          final double deadZone) {
+    if(deadZone < 0) {
+      throw new InvalidParameterException("Input a positive or 0 deadZone");
+    }
+    if(a < 0 || a >= 1) {
+      throw new InvalidParameterException("parameter (a) needs to be within range: 0 <= a < 1");
+    }
+
+    a = a/(1 - a);
+
+    if (-deadZone <= x && x <= deadZone) {
+      x = 0;
+    }
+
+    return Math.signum(x) * ((Math.pow(Math.exp(c) + 1, Math.abs(x)) - 1) / Math.exp(c) + a) / (1 + a);
   }
 }

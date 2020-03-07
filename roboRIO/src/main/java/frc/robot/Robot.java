@@ -1,7 +1,9 @@
 package frc.robot;
 
+import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
+import edu.wpi.first.wpilibj.util.Color;
 
 import java.util.logging.Logger;
 
@@ -25,6 +27,7 @@ public class Robot extends TimedRobot {
   private Compressor compressor;
   private Timer conveyorTimer;
   private ImageProcessor proc;
+  private ColorSensorV3 colorSensor;
 
   private static final Logger logger = Logger.getLogger(Robot.class.getName());
 
@@ -61,6 +64,12 @@ public class Robot extends TimedRobot {
     server = new VisionServer(this);
     server.start();
     proc = new ImageProcessor();
+    colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
+
+//    colorSensor.configureColorSensor(
+//        ColorSensorV3.ColorSensorResolution.kColorSensorRes13bit,
+//        ColorSensorV3.ColorSensorMeasurementRate.kColorRate50ms,
+//        ColorSensorV3.GainFactor.kGain3x);
   }
 
   @Override
@@ -75,14 +84,19 @@ public class Robot extends TimedRobot {
   }
 
   public void updateBalls() {
-    conveyor.set(ballsJoystick.getRawButton(BallButtons.Y.getValue()) ? 1 : 0);
+    updateColorWheel();
 
     hopperLift.set(ballsJoystick.getPOV() == 0);
-    hopperBar.set(ballsJoystick.getRawButton(BallButtons.X.getValue()) ? 0 : .5);
+    hopperBar.set(ballsJoystick.getRawButton(BallButtons.X.getValue()) ? .75 : .5);
 
+    conveyor.set(ballsJoystick.getRawButton(BallButtons.LEFT_TRIGGER.getValue()) ? 1 : 0);
+    if (ballsJoystick.getRawButton(BallButtons.LEFT_BUMPER.getValue())) {
+      conveyor.set(-1);
+    }
     loaderWheels.set(ballsJoystick.getRawButton(BallButtons.LEFT_TRIGGER.getValue()) ? 1 : 0);
-    loaderLiftUp.set(ballsJoystick.getRawButtonPressed(BallButtons.RIGHT_TRIGGER.getValue()));
-    loaderLiftDown.set(ballsJoystick.getRawButtonReleased(BallButtons.RIGHT_TRIGGER.getValue()));
+
+    loaderLiftUp.set(ballsJoystick.getRawButtonReleased(BallButtons.RIGHT_TRIGGER.getValue()));
+    loaderLiftDown.set(ballsJoystick.getRawButtonPressed(BallButtons.RIGHT_TRIGGER.getValue()));
 
     double left = -ballsJoystick.getRawAxis(1);
     double right = -ballsJoystick.getRawAxis(3);
@@ -92,18 +106,14 @@ public class Robot extends TimedRobot {
       robotLiftRight.set(right);
     } else {
       robotLiftBrakes.set(false);
-    }
-    if (ballsJoystick.getRawButton(1)) {
-      compressor.start();
-    }
-    if (ballsJoystick.getRawButton(3)) {
-      compressor.stop();
+      robotLiftLeft.set(0);
+      robotLiftRight.set(0);
     }
     colorWheel.set(ballsJoystick.getRawButton(BallButtons.LEFT_BUMPER.getValue()) ? 1 : 0);
   }
 
   public void updateDrive() {
-    double speed = driveJoystick.getRawButton(DriveButtons.LEFT_BUMPER.getValue()) ? .5 : 1;
+    double speed = driveJoystick.getRawButton(DriveButtons.LEFT_BUMPER.getValue()) ? .3 : 1;
     double forward = -driveJoystick.getRawAxis(1) * speed;
     double strafe = driveJoystick.getRawAxis(0) * speed;
     double turn = driveJoystick.getRawAxis(4) * speed;
@@ -114,6 +124,8 @@ public class Robot extends TimedRobot {
   }
 
   public void updateColorWheel() {
+    Color color = colorSensor.getColor();
+    System.out.println(color.red + ", " + color.green + ", " + color.blue);
   }
 
   private enum DriveButtons {

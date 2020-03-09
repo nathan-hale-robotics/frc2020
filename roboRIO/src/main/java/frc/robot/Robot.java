@@ -116,7 +116,7 @@ public class Robot extends TimedRobot {
   public void updateDrive() {
     final double C = 3;
     final double A = 0.05;
-    final double DEAD_ZONE = 0.05;
+    final double DEAD_ZONE = 0.01;
     double speed = driveJoystick.getRawButton(DriveButtons.LEFT_BUMPER.getValue()) ? .3 : 1;
     double forward = -driveJoystick.getRawAxis(1) * speed;
     double strafe = driveJoystick.getRawAxis(0) * speed;

@@ -88,6 +88,13 @@ public class Robot extends TimedRobot {
   public void updateBalls() {
     updateColorWheel();
 
+    if (ballsJoystick.getRawButtonPressed(BallButtons.BACK.getValue())) {
+      compressor.stop();
+    }
+    if (ballsJoystick.getRawButtonPressed(BallButtons.START.getValue())) {
+      compressor.start();
+    }
+
     hopperLift.set(ballsJoystick.getPOV() == 0);
     hopperBar.set(ballsJoystick.getRawButton(BallButtons.X.getValue()) ? .75 : .5);
 

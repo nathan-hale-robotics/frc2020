@@ -31,6 +31,7 @@ public class Robot extends TimedRobot {
   private ColorSensorV3 colorSensor;
 
   private static final Logger logger = Logger.getLogger(Robot.class.getName());
+  private boolean loaderIsUp = false;
 
   @Override
   public void robotInit() {
@@ -51,8 +52,8 @@ public class Robot extends TimedRobot {
     compressor          = new Compressor();
     hopperLift          = new Solenoid(0);
     robotLiftBrakes     = new Solenoid(1);
-    loaderLiftDown      = new Solenoid(2);
-    loaderLiftUp        = new Solenoid(3);
+    loaderLiftUp        = new Solenoid(2);
+    loaderLiftDown      = new Solenoid(3);
 
     conveyorTimer       = new Timer();
     conveyorTimer.start();
@@ -94,10 +95,22 @@ public class Robot extends TimedRobot {
     if (ballsJoystick.getRawButton(BallButtons.LEFT_BUMPER.getValue())) {
       conveyor.set(-1);
     }
-    loaderWheels.set(ballsJoystick.getRawButton(BallButtons.LEFT_TRIGGER.getValue()) ? 1 : 0);
+    loaderWheels.set(ballsJoystick.getRawButton(BallButtons.LEFT_TRIGGER.getValue()) ? .75 : 0);
 
-    loaderLiftUp.set(ballsJoystick.getRawButtonReleased(BallButtons.RIGHT_TRIGGER.getValue()));
-    loaderLiftDown.set(ballsJoystick.getRawButtonPressed(BallButtons.RIGHT_TRIGGER.getValue()));
+    if (ballsJoystick.getRawButtonPressed(BallButtons.RIGHT_TRIGGER.getValue())) {
+      if (loaderIsUp) {
+        System.out.println("Putting loader down");
+        loaderLiftUp.set(false);
+        loaderLiftDown.set(true);
+      } else {
+        loaderLiftUp.set(true);
+        loaderLiftDown.set(false);
+      }
+      loaderIsUp = !loaderIsUp;
+    } else {
+      loaderLiftUp.set(false);
+      loaderLiftDown.set(false);
+    }
 
     double left = -ballsJoystick.getRawAxis(1);
     double right = -ballsJoystick.getRawAxis(3);

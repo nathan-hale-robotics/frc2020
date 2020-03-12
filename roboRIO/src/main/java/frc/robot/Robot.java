@@ -130,7 +130,7 @@ public class Robot extends TimedRobot {
       robotLiftLeft.set(0);
       robotLiftRight.set(0);
     }
-    colorWheel.set(ballsJoystick.getRawButton(BallButtons.LEFT_BUMPER.getValue()) ? 1 : 0);
+    colorWheel.set(ballsJoystick.getRawButton(BallButtons.A.getValue()) ? 1 : 0);
   }
 
   public void updateDrive() {

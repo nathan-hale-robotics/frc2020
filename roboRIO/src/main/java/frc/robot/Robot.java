@@ -96,7 +96,7 @@ public class Robot extends TimedRobot {
     }
 
     hopperLift.set(ballsJoystick.getPOV() == 0);
-    hopperBar.set(ballsJoystick.getRawButton(BallButtons.X.getValue()) ? .75 : .5);
+    hopperBar.set(ballsJoystick.getRawButton(BallButtons.X.getValue()) ? .25: .5);
 
     conveyor.set(ballsJoystick.getRawButton(BallButtons.LEFT_TRIGGER.getValue()) ? 1 : 0);
     if (ballsJoystick.getRawButton(BallButtons.LEFT_BUMPER.getValue())) {
@@ -135,7 +135,7 @@ public class Robot extends TimedRobot {
 
   public void updateDrive() {
     final double C = 3;
-    final double A = 0.05;
+    final double A = 0.1;
     final double DEAD_ZONE = 0.01;
     double speed = driveJoystick.getRawButton(DriveButtons.LEFT_BUMPER.getValue()) ? .3 : 1;
     double forward = -driveJoystick.getRawAxis(1) * speed;
@@ -149,7 +149,6 @@ public class Robot extends TimedRobot {
 
   public void updateColorWheel() {
     Color color = colorSensor.getColor();
-    System.out.println(color.red + ", " + color.green + ", " + color.blue);
   }
 
   private enum DriveButtons {
